@@ -108,34 +108,7 @@ class ConnectionManager {
         this.isMobile = isMobile;
         
         this.socket = io();
-        this.peer = new RTCPeerConnection({
-            iceServers: [ 
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { 
-                    urls: 'turn:openrelay.metered.ca:80',
-                    username: 'openrelayproject',
-                    credential: 'openrelayproject'
-                },
-                { 
-                    urls: 'turn:openrelay.metered.ca:443',
-                    username: 'openrelayproject',
-                    credential: 'openrelayproject'
-                },
-                { 
-                    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-                    username: 'openrelayproject',
-                    credential: 'openrelayproject'
-                }
-            ]
-        });
-        
-        this.peer.oniceconnectionstatechange = () => {
-            if (this.peer.iceConnectionState === 'failed') {
-                alert('Connection Failed: A strict firewall blocked the P2P connection.');
-            }
-        };
-
+        this.peer = null;
         this.dataChannel = null;
         this.pendingCandidates = [];
         
@@ -145,7 +118,30 @@ class ConnectionManager {
         this.init();
     }
 
-    init() {
+    async init() {
+        let iceServers = [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+        ];
+
+        try {
+            const response = await fetch('/api/turn');
+            const turnServers = await response.json();
+            if (Array.isArray(turnServers) && turnServers.length > 0) {
+                iceServers = [...iceServers, ...turnServers];
+            }
+        } catch (e) {
+            console.error('Failed to fetch secure TURN servers', e);
+        }
+
+        this.peer = new RTCPeerConnection({ iceServers });
+        
+        this.peer.oniceconnectionstatechange = () => {
+            if (this.peer.iceConnectionState === 'failed') {
+                alert('Connection Failed: A strict firewall blocked the P2P connection.');
+            }
+        };
+
         this.socket.on('connect', () => {
             this.socket.emit('join-room', this.roomId);
             if (this.isMobile) {
