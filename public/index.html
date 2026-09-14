@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebRTC Drawing</title>
+        <link rel="stylesheet" href="index.css">
+        <!-- This stops mobile devices from zooming in by accident -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+        
+        <!-- Makes Safari's top bar blend perfectly with the app background -->
+        <meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
+        
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="Mdraw">
+    </head>
+    <body>
+        <div id="ui-container">
+            
+            <div id="color-popover" class="popover">
+                <div class="palette">
+                    <button class="color-swatch active" style="background-color: #1c1c1e;" data-color="#1c1c1e"></button>
+                    <button class="color-swatch" style="background-color: #FF3B30;" data-color="#FF3B30"></button>
+                    <button class="color-swatch" style="background-color: #007AFF;" data-color="#007AFF"></button>
+                    <button class="color-swatch" style="background-color: #34C759;" data-color="#34C759"></button>
+                    <button class="color-swatch" style="background-color: #FF9500;" data-color="#FF9500"></button>
+                </div>
+            </div>
+            
+            <div id="size-popover" class="popover">
+                <div class="brush-sizes">
+                    <button class="size-dot" data-size="3"><span style="width: 5px; height: 5px;"></span></button>
+                    <button class="size-dot active" data-size="6"><span style="width: 10px; height: 10px;"></span></button>
+                    <button class="size-dot" data-size="14"><span style="width: 16px; height: 16px;"></span></button>
+                    <button class="size-dot" data-size="24"><span style="width: 22px; height: 22px;"></span></button>
+                </div>
+            </div>
+
+            <div id="more-popover" class="popover">
+                <div class="more-menu">
+                    <button id="download-btn" title="Save Artwork" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
+                    <button id="fullscreen-btn" title="Fullscreen" class="icon-btn">
+                        <img src="icons/maximize.png" alt="Fullscreen">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Toolbar -->
+            <div id="toolbar">
+                <button id="active-color-btn" class="icon-btn" title="Choose Color">
+                    <span class="active-color-swatch" style="background-color: #1c1c1e;"></span>
+                </button>
+                
+                <div class="divider"></div>
+                
+                <button id="active-size-btn" class="icon-btn" title="Choose Brush Size">
+                    <div class="active-size-icon">
+                        <span style="width: 10px; height: 10px; background-color: #1c1c1e;"></span>
+                    </div>
+                </button>
+                
+                <div class="divider"></div>
+                
+                <button id="clear-btn" title="Clear Board" class="icon-btn">
+                    <img src="icons/trash-can.png" alt="Clear Board">
+                </button>
+                
+                <div class="divider qr-divider"></div>
+                
+                <button id="qr-btn" title="Pair Mobile Device" class="icon-btn">
+                    <img src="icons/scan.png" alt="Pair Device">
+                </button>
+                
+                <div class="divider"></div>
+                
+                <button id="more-btn" title="More Options" class="icon-btn">
+                    <img src="icons/more.png" alt="More Options">
+                </button>
+            </div>
+        </div>
+        
+        <!-- The QR Code Overlay for PC -->
+        <div id="qr-overlay">
+            <div class="qr-card">
+                <h2>Connect Mobile</h2>
+                <p>Scan this with your phone to use it as a drawing tablet!</p>
+                <p style="font-size: 13px; color: #8e8e93; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Real-time WebRTC P2P</p>
+                <div id="qrcode"></div>
+                <button id="close-qr" style="margin-top: 10px; padding: 8px 20px; border-radius: 20px; border: none; background: #e5e5ea; font-weight: bold; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- The Artboard -->
+        <canvas id="board"></canvas>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="client.js"></script>
+    </body>
+</html>

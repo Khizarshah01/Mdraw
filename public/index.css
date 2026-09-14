@@ -1,0 +1,310 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    overflow: hidden;
+    background-color: #F4F5F7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+#board {
+    display: block;
+    touch-action: none; 
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 35px;
+    box-sizing: border-box;
+}
+
+#toolbar {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255,255,255,0.2) inset;
+    pointer-events: auto;
+    
+    align-self: center;
+    padding: 12px 24px;
+    border-radius: 36px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 90vw;
+    box-sizing: border-box;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpFade {
+    0% { transform: translateY(40px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.divider {
+    width: 1.5px;
+    height: 28px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 2px;
+}
+
+#toolbar::-webkit-scrollbar {
+    display: none;
+}
+
+.palette, .brush-sizes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.color-swatch.active {
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.2);
+    transform: scale(1.2);
+}
+
+.size-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.size-dot span {
+    background: #1c1c1e;
+    border-radius: 50%;
+    display: block;
+    opacity: 0.5;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.size-dot:hover span {
+    opacity: 0.8;
+    transform: scale(1.2);
+}
+
+.size-dot.active span {
+    opacity: 1;
+    transform: scale(1.4);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon-btn img, .icon-btn svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.8;
+    transition: opacity 0.25s;
+    color: #1c1c1e; /* Ensure SVG is dark grey like other icons */
+}
+
+.icon-btn:hover {
+    transform: scale(1.25);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.icon-btn:hover img, .icon-btn:hover svg {
+    opacity: 1;
+}
+
+.active-color-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: background-color 0.2s;
+}
+
+.active-size-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.active-size-icon span {
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.more-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popover {
+    position: absolute;
+    bottom: 110px; /* Float exactly above the toolbar */
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.2) inset;
+    border-radius: 30px;
+    padding: 12px 20px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 20;
+    align-self: center; /* keep it centered relative to the flex container */
+}
+
+.popover.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+#qr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.qr-card {
+    background: white;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    text-align: center;
+    max-width: 300px;
+}
+
+.qr-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.qr-card p {
+    color: #666;
+    margin: 0 0 20px 0;
+    font-size: 14px;
+}
+
+#qrcode {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    display: inline-block;
+    border: 1px solid #E5E5EA;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+@media (max-width: 600px) {
+    #ui-container {
+        padding: 20px 15px;
+        justify-content: flex-end; 
+    }
+    
+    #toolbar {
+        padding: 10px 15px;
+        gap: 12px;
+        border-radius: 30px;
+    }
+
+    .color-swatch {
+        width: 20px;
+        height: 20px;
+    }
+
+    .size-dot {
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon-btn img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .divider {
+        height: 24px;
+    }
+}
